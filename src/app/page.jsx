@@ -11,7 +11,7 @@ export default function Home() {
 					<p className="text-mutedGray my-3 text-lg text-center max-w-lg">
 						Share your thoughts, write your ideas, and inspire the world.
 					</p>
-					<Link href="/api/auth/register">
+					<Link href="/auth/register">
 						<Button>Register Now</Button>
 					</Link>
 				</CardContent>
