@@ -10,11 +10,11 @@ export default {
 		extend: {
 			colors: {
 				// Custom Colors
-				black: '#121212',
-				lightGray: '#E0E0E0',
+				black: '#111111',
+				lightGray: '#868686',
 				mutedGray: '#A0A0A0',
-				softBlue: '#4A90E2',
-				darkGray: '#1E1E1E',
+				softPurple: '#BBACFF',
+				darkGray: '#151515',
 
 				background: 'hsl(var(--background))',
 				foreground: 'hsl(var(--foreground))',

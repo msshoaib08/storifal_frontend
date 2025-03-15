@@ -1,122 +1,80 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useCallback } from 'react';
 import { toast } from 'sonner';
 import validator from 'validator';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
-import { API } from '@/utils/api';
-import { formatDate } from '@/utils/dateUtils';
+import { useAuth } from '@/context/AuthContext';
+
+const nameRegex = /^[A-Za-z\s]+$/;
+const passwordRegex =
+	/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{6,}$/;
+const disposalEmail = ['tempmail.com', 'mailinator.com', 'guerrillamail.com'];
 
 const RegisterForm = () => {
+	const { register } = useAuth();
 	const [formData, setFormData] = useState({
 		name: '',
 		email: '',
 		password: '',
 	});
-
-	const [errors, setErrors] = useState({});
 	const [loading, setLoading] = useState(false);
 
-	const nameRegex = /^[A-Za-z\s]+$/;
-	const passwordRegex =
-		/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{6,}$/;
-
-	// Disposable email domains
-	const disposalEmail = ['tempmail.com', 'mailinator.com', 'guerrillamail.com'];
-
-	const validateField = (name, value) => {
-		let error = '';
+	const validateField = useCallback((name, value) => {
+		if (!value.trim())
+			return `${name.charAt(0).toUpperCase() + name.slice(1)} is required`;
 
 		if (name === 'name') {
-			if (!value.trim()) {
-				error = 'Name is required';
-			} else if (value.length < 3) {
-				error = 'Name must be at least 3 characters';
-			} else if (!nameRegex.test(value)) {
-				error = 'Name should only contain alphabets and spaces';
-			}
+			if (value.length < 3) return 'Name must be at least 3 characters';
+			if (!nameRegex.test(value)) return 'Only alphabets & spaces allowed';
 		}
 
 		if (name === 'email') {
-			if (!value.trim()) {
-				error = 'Email is required';
-			} else if (!validator.isEmail(value)) {
-				error = 'Invalid email format';
-			} else if (disposalEmail.some((domain) => value.endsWith(domain))) {
-				error = 'Disposable email addresses are not allowed';
-			}
+			if (!validator.isEmail(value)) return 'Invalid email format';
+			if (disposalEmail.some((domain) => value.endsWith(domain)))
+				return 'Disposable emails not allowed';
 		}
 
-		if (name === 'password') {
-			if (!value.trim()) {
-				error = 'Password is required';
-			} else if (!passwordRegex.test(value)) {
-				error =
-					'Password must be at least 6 characters long, contain an uppercase letter, a lowercase letter, a number, and a special character';
-			}
+		if (name === 'password' && !passwordRegex.test(value)) {
+			return 'Password must have 6+ characters, 1 uppercase, 1 number & 1 special character';
 		}
 
-		return error;
-	};
+		return '';
+	}, []);
 
 	const handleChange = (e) => {
 		const { name, value } = e.target;
-		setFormData({ ...formData, [name]: value });
-
-		setErrors({ ...errors, [name]: '' });
+		setFormData((prev) => ({ ...prev, [name]: value }));
 	};
 
 	const handleBlur = (e) => {
 		const { name, value } = e.target;
 		const error = validateField(name, value);
-		setErrors((prevErrors) => ({ ...prevErrors, [name]: error }));
-
 		if (error) toast.error(error);
 	};
 
-	// Form submission
 	const handleSubmit = async (e) => {
 		e.preventDefault();
-
-		// Validate all fields before submission
-		let newErrors = {};
-		Object.keys(formData).forEach((key) => {
-			const error = validateField(key, formData[key]);
-			if (error) newErrors[key] = error;
-		});
-
-		setErrors(newErrors);
-
-		// If errors exist, prevent submission
-		if (Object.keys(newErrors).length > 0) return;
-
 		setLoading(true);
 
-		try {
-			const res = await API.post('/auth/register', formData);
-			toast('Verification email sent successfully! Check your Inbox.', {
-				description: formatDate,
-				action: {
-					label: 'Close',
-				},
-			});
-
-			setFormData({ name: '', email: '', password: '' });
-			setErrors({});
-			console.log(res.data);
-		} catch (error) {
-			toast('Registration Failed. Try Again.', {
-				description: formatDate,
-				action: {
-					label: 'Close',
-				},
-			});
-			console.log(error);
-		} finally {
-			setLoading(false);
+		for (const key of Object.keys(formData)) {
+			const error = validateField(key, formData[key]);
+			if (error) {
+				toast.error(error);
+				setLoading(false);
+				return;
+			}
 		}
+
+		// Call register function from AuthContext
+		const result = await register(formData);
+		if (result.success) {
+			setFormData({ name: '', email: '', password: '' });
+		}
+
+		setLoading(false);
 	};
 
 	return (
@@ -129,39 +87,29 @@ const RegisterForm = () => {
 
 			<CardContent>
 				<form onSubmit={handleSubmit} className="space-y-4">
-					<Input
-						type="text"
-						name="name"
-						value={formData.name}
-						onChange={handleChange}
-						onBlur={handleBlur}
-						placeholder="Full Name"
-						className="mt-1 md:text-base bg-black text-lightGray border-mutedGray placeholder:text-mutedGray"
-					/>
-
-					<Input
-						type="email"
-						name="email"
-						value={formData.email}
-						onChange={handleChange}
-						onBlur={handleBlur}
-						placeholder="Email address"
-						className="mt-1 md:text-base bg-black text-lightGray border-mutedGray placeholder:text-mutedGray"
-					/>
-
-					<Input
-						type="password"
-						name="password"
-						value={formData.password}
-						onChange={handleChange}
-						onBlur={handleBlur}
-						placeholder="Password"
-						className="mt-1 md:text-base bg-black text-lightGray border-mutedGray placeholder:text-mutedGray"
-					/>
+					{['name', 'email', 'password'].map((field) => (
+						<Input
+							key={field}
+							type={field === 'password' ? 'password' : 'text'}
+							name={field}
+							value={formData[field]}
+							onChange={handleChange}
+							onBlur={handleBlur}
+							placeholder={
+								field === 'name'
+									? 'Full Name'
+									: field === 'email'
+									? 'Email Address'
+									: 'Password'
+							}
+							className="mt-1 md:text-base bg-black text-lightGray border-mutedGray placeholder:text-mutedGray"
+						/>
+					))}
 
 					<Button
 						variant="primary"
 						type="submit"
+						disabled={loading}
 						className="w-fit mx-auto bg-black text-lightGray text-base font-bold"
 					>
 						{loading ? 'Creating your account...' : 'Create your account'}
