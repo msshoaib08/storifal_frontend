@@ -9,7 +9,7 @@ import Image from 'next/image';
 
 export default function StaticNavbar() {
 	return (
-		<nav className="w-full py-5 bg-black text-white border-b border-mutedGray/20 sticky top-0 z-50 backdrop-blur-lg bg-opacity-70">
+		<nav className="w-full py-5 bg-black text-white border-b border-mutedGray/20 sticky top-0 z-50 backdrop-blur-md bg-opacity-70">
 			<div className="max-w-7xl mx-auto w-full px-5 md:px-10 flex justify-between items-center">
 				<div className="flex items-center gap-10">
 					{/* Logo */}

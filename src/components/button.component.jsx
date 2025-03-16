@@ -12,7 +12,7 @@ export function AnimatedButton() {
 
 	return (
 		<motion.button
-			className="group relative inline-flex items-center gap-3 px-6 py-2.5 font-bold rounded-full transition-colors duration-300"
+			className="group relative w-fit inline-flex items-center gap-3 px-6 py-2.5 font-bold rounded-full transition-colors duration-300"
 			style={{
 				backgroundColor: isHovered ? 'transparent' : '#BBACFF',
 				color: isHovered ? 'white' : 'black',

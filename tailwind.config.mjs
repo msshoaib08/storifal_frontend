@@ -57,10 +57,16 @@ export default {
 					5: 'hsl(var(--chart-5))',
 				},
 			},
+
+			boxShadow: {
+				'2xl': '0 0 8px rgba(255,255,255,0.6)',
+			},
+
 			fontFamily: {
 				serif: ['Manrope', 'serif'],
 				sans: ['Merriweather Sans', 'serif'],
 			},
+
 			borderRadius: {
 				lg: 'var(--radius)',
 				md: 'calc(var(--radius) - 2px)',

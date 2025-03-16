@@ -112,6 +112,10 @@
 		@apply p-0 m-0 box-border !scroll-smooth duration-100;
 	}
 
+	::selection {
+		@apply bg-white text-black;
+	}
+
 	html {
 		@apply scroll-smooth;
 	}
