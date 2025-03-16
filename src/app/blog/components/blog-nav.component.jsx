@@ -14,7 +14,13 @@ export default function BlogNavbar() {
 			<div className="max-w-7xl mx-auto w-full px-5 md:px-10 flex justify-between items-center">
 				{/* Logo */}
 				<Link href="/" onClick={() => window.location.reload()}>
-					<Image src="/assets/logo.svg" width={40} height={40} alt="logo" />
+					<Image
+						src="/assets/logo.svg"
+						width={40}
+						height={40}
+						alt="logo"
+						unoptimized
+					/>
 				</Link>
 
 				{/* Desktop Menu */}

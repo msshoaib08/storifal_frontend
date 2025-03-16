@@ -14,7 +14,13 @@ export default function StaticNavbar() {
 				<div className="flex items-center gap-10">
 					{/* Logo */}
 					<Link href="/" className="text-xl font-bold text-softPurple">
-						<Image src="/assets/logo.svg" width={40} height={40} alt="logo" />
+						<Image
+							src="/assets/logo.svg"
+							width={40}
+							height={40}
+							alt="logo"
+							unoptimized
+						/>
 					</Link>
 
 					{/* Desktop Navigation */}

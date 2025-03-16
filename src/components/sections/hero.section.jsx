@@ -67,6 +67,7 @@ const HomeSection = () => {
 												width={20}
 												height={20}
 												alt="star-icon"
+												unoptimized
 											/>
 										</motion.div>
 									))}
@@ -118,6 +119,7 @@ const HomeSection = () => {
 							height={600}
 							alt="home image"
 							className="shadow-2xl rounded-xl border-4 border-mutedGray/50"
+							unoptimized
 						/>
 					</motion.div>
 				</div>
