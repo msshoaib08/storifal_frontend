@@ -115,4 +115,8 @@
 	html {
 		@apply scroll-smooth;
 	}
+
+	section {
+		@apply relative h-full w-full flex justify-center items-center overflow-hidden py-16;
+	}
 }

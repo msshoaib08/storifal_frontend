@@ -5,17 +5,19 @@ import './globals.css';
 import { Toaster } from 'sonner';
 import { AnimatePresence, motion } from 'framer-motion';
 import { AuthProvider } from '@/context/AuthContext';
-import Navbar from '@/components/navbar.component';
 import { usePathname } from 'next/navigation';
+import StaticNavbar from '@/components/navbar.component';
 
 export default function RootLayout({ children }) {
 	const pathname = usePathname();
+
+	const showStaticNavbar = !pathname.startsWith('/blog');
 
 	return (
 		<html lang="en">
 			<body className="font-serif antialiased text-lightGray bg-black">
 				<AuthProvider>
-					<Navbar />
+					{showStaticNavbar && <StaticNavbar />}
 					<AnimatePresence mode="wait">
 						<motion.main
 							key={pathname}

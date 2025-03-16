@@ -2,30 +2,47 @@
 
 import { motion } from 'framer-motion';
 import { ArrowUpRight } from 'lucide-react';
+import { useRouter } from 'next/navigation';
+
+import { useState } from 'react';
 
 export function AnimatedButton() {
+	const router = useRouter();
+	const [isHovered, setIsHovered] = useState(false);
+
 	return (
 		<motion.button
-			whileHover={{ scale: 1.05 }}
-			whileTap={{ scale: 0.95 }}
-			className="group relative inline-flex items-center gap-3 px-6 py-2.5 text-black font-bold bg-softPurple rounded-full transition-colors duration-300 border border-softPurple hover:border hover:border-softPurple hover:text-white hover:bg-transparent"
+			className="group relative inline-flex items-center gap-3 px-6 py-2.5 font-bold rounded-full transition-colors duration-300"
+			style={{
+				backgroundColor: isHovered ? 'transparent' : '#BBACFF',
+				color: isHovered ? 'white' : 'black',
+				border: '1px solid #BBACFF',
+			}}
+			onHoverStart={() => setIsHovered(true)}
+			onHoverEnd={() => setIsHovered(false)}
+			onClick={() => router.push('/blog')}
 		>
 			Get Started
-			<span className="relative flex items-center justify-center w-[30px] h-[30px] bg-white rounded-full overflow-hidden text-black">
+			<span className="relative flex items-center justify-center w-8 h-8 bg-white rounded-full overflow-hidden">
 				<motion.div
-					initial={{ x: 0, y: 0 }}
-					whileHover={{ x: '100%', y: '-100%' }}
+					className="absolute flex items-center justify-center w-full h-full text-purple-700"
+					animate={{
+						x: isHovered ? '150%' : '0%',
+						y: isHovered ? '-150%' : '0%',
+					}}
 					transition={{ duration: 0.3, ease: 'easeInOut' }}
-					className="absolute flex items-center justify-center w-full h-full"
 				>
 					<ArrowUpRight size={18} />
 				</motion.div>
 
 				<motion.div
-					initial={{ x: '-100%', y: '100%' }}
-					whileHover={{ x: 0, y: 0 }}
+					className="absolute flex items-center justify-center w-full h-full text-black"
+					initial={{ x: '-150%', y: '150%' }}
+					animate={{
+						x: isHovered ? '0%' : '-150%',
+						y: isHovered ? '0%' : '150%',
+					}}
 					transition={{ duration: 0.3, ease: 'easeInOut', delay: 0.1 }}
-					className="absolute flex items-center justify-center w-full h-full"
 				>
 					<ArrowUpRight size={18} />
 				</motion.div>
